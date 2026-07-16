@@ -3,11 +3,15 @@ using UnityEngine;
 public class GridCell : MonoBehaviour
 {
     public GameObject currentAlien;
-}
-    public bool IsOccupied { get; private set; } = false;
+
+    public bool IsOccupied
+    {
+        get { return currentAlien != null; }
+    }
 
     public void SetOccupied(bool occupied)
     {
-        IsOccupied = occupied;
+        // 今は何もしない
+        // 後で必要になったら処理を追加する
     }
 }
