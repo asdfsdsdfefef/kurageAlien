@@ -11,6 +11,8 @@ public class Alien : MonoBehaviour
 
     public int currentHP;
 
+    public GridCell currentCell;
+
     private void Awake()
     {
         currentHP = maxHP;

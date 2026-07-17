@@ -1,2 +1,13 @@
 fileFormatVersion: 2
 guid: 10cbeaa30c08c0b46b3f5223884389bf
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - alienPrefab: {instanceID: 0}
+  - gridManager: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

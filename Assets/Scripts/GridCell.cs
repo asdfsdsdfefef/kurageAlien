@@ -9,6 +9,16 @@ public class GridCell : MonoBehaviour
         get { return currentAlien != null; }
     }
 
+    public void SetAlien(GameObject alien)
+    {
+        currentAlien = alien;
+    }
+
+    public void ClearAlien()
+    {
+        currentAlien = null;
+    }
+
     public void SetOccupied(bool occupied)
     {
         // 今は何もしない
