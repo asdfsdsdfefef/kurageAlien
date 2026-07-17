@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class AlienDrag : MonoBehaviour
 {
+    private bool placedSuccessfully = false;
     private Vector3 offset;
     private Vector3 startPosition;
 
@@ -34,6 +35,32 @@ public class AlienDrag : MonoBehaviour
 
     private void OnMouseUp()
     {
-        transform.position = startPosition;
+        placedSuccessfully = false;
+
+        GridCell[] cells = FindObjectsOfType<GridCell>();
+
+        GridCell nearestCell = null;
+        float nearestDistance = Mathf.Infinity;
+
+        foreach (GridCell cell in cells)
+        {
+            float distance = Vector2.Distance(transform.position, cell.transform.position);
+
+            if (distance < nearestDistance)
+            {
+                nearestDistance = distance;
+                nearestCell = cell;
+            }
+        }
+
+        if (nearestCell != null)
+        {
+            placedSuccessfully = nearestCell.TryPlaceAlien(alien);
+        }
+
+        if (!placedSuccessfully)
+        {
+            transform.position = startPosition;
+        }
     }
 }

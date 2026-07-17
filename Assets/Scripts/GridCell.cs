@@ -24,4 +24,29 @@ public class GridCell : MonoBehaviour
         // 今は何もしない
         // 後で必要になったら処理を追加する
     }
+
+    public bool TryPlaceAlien(Alien alien)
+    {
+        // このマスが埋まっているなら失敗
+        if (IsOccupied)
+        {
+            return false;
+        }
+
+        // 元のマスを空にする
+        if (alien.currentCell != null)
+        {
+            alien.currentCell.ClearAlien();
+        }
+
+        // 新しいマスへ登録
+        SetAlien(alien.gameObject);
+
+        alien.currentCell = this;
+
+        // クラゲをこのマスへ移動
+        alien.transform.position = transform.position;
+
+        return true;
+    }
 }
