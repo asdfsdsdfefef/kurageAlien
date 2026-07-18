@@ -37,7 +37,7 @@ public class AlienDrag : MonoBehaviour
     {
         placedSuccessfully = false;
 
-        GridCell[] cells = FindObjectsOfType<GridCell>();
+        GridCell[] cells = FindObjectsByType<GridCell>();
 
         GridCell nearestCell = null;
         float nearestDistance = Mathf.Infinity;
