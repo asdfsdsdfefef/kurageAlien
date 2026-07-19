@@ -30,6 +30,13 @@ public class GridCell : MonoBehaviour
         // このマスが埋まっているなら失敗
         if (IsOccupied)
         {
+            Alien targetAlien = currentAlien.GetComponent<Alien>();
+
+            if (MergeManager.Instance.TryMerge(alien, targetAlien))
+            {
+            return true;
+            }
+
             return false;
         }
 

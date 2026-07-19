@@ -11,13 +11,28 @@ public class MergeManager : MonoBehaviour
 
     public bool TryMerge(Alien movingAlien, Alien targetAlien)
     {
-        if (movingAlien.level != targetAlien.level)
+        if (!CanMerge(movingAlien, targetAlien))
         {
             return false;
         }
 
-        Debug.Log("マージ成功！");
+        Merge(movingAlien, targetAlien);
 
         return true;
+    }
+    private bool CanMerge(Alien movingAlien, Alien targetAlien)
+    {
+        return movingAlien.level == targetAlien.level;
+    }
+    private void Merge(Alien movingAlien, Alien targetAlien)
+    {   
+        // 移動するクラゲを相手のマスへ移動
+        movingAlien.MoveToCell(targetAlien.currentCell);
+
+        // 相手のクラゲを削除
+        Destroy(targetAlien.gameObject);
+
+        // レベルアップ
+        movingAlien.LevelUp();
     }
 }

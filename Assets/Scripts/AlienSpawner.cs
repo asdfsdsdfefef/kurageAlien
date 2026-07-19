@@ -16,11 +16,9 @@ public class AlienSpawner : MonoBehaviour
             return;
         }
 
-        GameObject alien = Instantiate(alienPrefab, cell.transform.position, Quaternion.identity);
+    GameObject alien = Instantiate(alienPrefab, cell.transform.position, Quaternion.identity);
 
-        cell.SetAlien(alien);
-
-        Alien alienComponent = alien.GetComponent<Alien>();
-        alienComponent.currentCell = cell;
+    Alien alienComponent = alien.GetComponent<Alien>();
+    alienComponent.MoveToCell(cell);    
     }
 }
