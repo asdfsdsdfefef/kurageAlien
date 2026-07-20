@@ -3,6 +3,11 @@ using UnityEngine;
 public class GridCell : MonoBehaviour
 {
     public GameObject currentAlien;
+    [Header("グリッド座標")]
+
+    [SerializeField] private Vector2Int gridPosition;
+
+    public Vector2Int GridPosition => gridPosition;
 
     public bool IsOccupied
     {
@@ -55,5 +60,10 @@ public class GridCell : MonoBehaviour
         alien.transform.position = transform.position;
 
         return true;
+    }
+
+    public void SetGridPosition(Vector2Int position)
+    {
+        gridPosition = position;
     }
 }

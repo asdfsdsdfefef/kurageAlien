@@ -2,8 +2,6 @@ using UnityEngine;
 
 public enum BattleState
 {
-    Idle,
-    Preparing,
     Battle,
     Finished
 }
@@ -14,15 +12,50 @@ public class BattleManager : MonoBehaviour
     [SerializeField] private Planet planet;
 
     [Header("戦闘状態")]
-    [SerializeField] private BattleState currentState = BattleState.Idle;
+    [SerializeField] private BattleState currentState;
+
+    [Header("戦闘用クラゲ")]
+    [SerializeField] private BattleAlien battleAlienPrefab;
 
     private void Awake()
     {
-        currentState = BattleState.Idle;
-
         Debug.Log("BattleManager Ready");
-        Debug.Log("Current State : " + currentState);
+        LoadBattleData();
+        SpawnBattleAliens();
+    }
 
+    private void LoadBattleData()
+    {
+        Debug.Log("----- 出撃クラゲ一覧 -----");
+
+        foreach (BattleAlienData data in BattleData.aliens)
+        {
+            Debug.Log($"Lv.{data.level} 位置({data.gridPosition.x},{data.gridPosition.y})");
+        }
+
+        Debug.Log("-------------------------");
+    }
+
+    private void SpawnBattleAliens()
+    {
+        float startX = -2.4f;
+        float startY = 2.4f;
+        float cellSize = 1.2f;
+    
+        foreach (BattleAlienData data in BattleData.aliens)
+        {
+            Vector3 spawnPosition = new Vector3(
+                startX + data.gridPosition.x * cellSize,
+                startY - data.gridPosition.y * cellSize,
+                0f);
+    
+            BattleAlien alien = Instantiate(
+                battleAlienPrefab,
+                spawnPosition,
+                Quaternion.identity);
+    
+            alien.Initialize(data.level);
+        }
     }
 
     private void ChangeState(BattleState newState)
@@ -32,11 +65,6 @@ public class BattleManager : MonoBehaviour
     }
 
     private void StartBattle()
-    {
-        ChangeState(BattleState.Preparing);
-    }
-
-    private void BeginBattle()
     {
         ChangeState(BattleState.Battle);
     }

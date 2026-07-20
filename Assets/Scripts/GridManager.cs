@@ -38,7 +38,9 @@ public class GridManager : MonoBehaviour
                     transform);
 
                 GridCell cell = cellObject.GetComponent<GridCell>();
-
+                
+                cell.SetGridPosition(new Vector2Int(x, y));
+                
                 cells.Add(cell);
             }
         }
@@ -62,5 +64,10 @@ public class GridManager : MonoBehaviour
         }
 
         return emptyCells[Random.Range(0, emptyCells.Count)];
+    }
+
+    public List<GridCell> GetAllCells()
+    {
+        return cells;
     }
 }
