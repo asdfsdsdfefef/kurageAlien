@@ -30,6 +30,8 @@ public class BattleManager : MonoBehaviour
         Debug.Log("BattleManager Ready");
         LoadBattleData();
         SpawnBattleAliens();
+
+        planet.OnDestroyed += OnPlanetDestroyed;
     }
 
     private void LoadBattleData()
@@ -63,7 +65,7 @@ public class BattleManager : MonoBehaviour
                 spawnPosition,
                 Quaternion.identity);
     
-                alien.Initialize(data.level);
+                alien.Initialize(data.level, planet);
 
                 alien.OnReachedTarget += OnAlienReached;
 
@@ -121,5 +123,17 @@ public class BattleManager : MonoBehaviour
             alien.BeginBattle();
         }
     }
+    
+    private void OnPlanetDestroyed()
+    {
+        EndBattle();
+    }
 
+    private void OnDestroy()
+    {
+        if (planet != null)
+        {
+            planet.OnDestroyed -= OnPlanetDestroyed;
+        }
+    }
 }

@@ -9,17 +9,28 @@ public class BattleAlien : MonoBehaviour
 
     [SerializeField] private float attackInterval = 1.0f;
 
+    [Header("HP")]
+    [SerializeField] private int maxHP = 10;
+    [SerializeField] private int currentHP;
+
     private bool canAttack = false;
     private float attackTimer = 0f;
 
     private Vector3 targetPosition;
     private bool isMoving = false;
 
+    private Planet targetPlanet;
+
     public System.Action<BattleAlien> OnReachedTarget;
 
-    public void Initialize(int level)
+    public void Initialize(int level, Planet planet)
     {
-        Debug.Log($"BattleAlien Lv.{level} 生成");
+        this.level = level;
+        targetPlanet = planet;
+        currentHP = maxHP;
+
+        Debug.Log($"BattleAlien Lv.{level} Initialized");
+        Debug.Log($"BattleAlien HP : {currentHP} / {maxHP}");
     }
 
     public void StartMove(Vector3 target)
@@ -69,5 +80,20 @@ public class BattleAlien : MonoBehaviour
     private void Attack()
     {
         Debug.Log($"{gameObject.name} が攻撃！");
+
+        targetPlanet.TakeDamage(1);
+
+        // 攻撃の反動で自分もダメージを受ける
+        TakeDamage(1);
+    }
+
+    public void TakeDamage(int damage)
+    {
+        currentHP -= damage;
+
+        // HPが０未満にならないようにする
+        currentHP = Mathf.Max(currentHP, 0);
+
+        Debug.Log($"BattleAlien HP : {currentHP} / {maxHP}");
     }
 }
