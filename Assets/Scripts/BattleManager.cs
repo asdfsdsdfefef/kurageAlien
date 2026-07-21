@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public enum BattleState
 {
@@ -16,6 +17,13 @@ public class BattleManager : MonoBehaviour
 
     [Header("戦闘用クラゲ")]
     [SerializeField] private BattleAlien battleAlienPrefab;
+
+    [Header("移動設定")]
+    [SerializeField] private Transform battleTarget;
+
+    private int reachedAlienCount = 0;
+    private int totalAlienCount = 0;
+    private readonly List<BattleAlien> battleAliens = new();
 
     private void Awake()
     {
@@ -38,6 +46,7 @@ public class BattleManager : MonoBehaviour
 
     private void SpawnBattleAliens()
     {
+        battleAliens.Clear();
         float startX = -2.4f;
         float startY = 2.4f;
         float cellSize = 1.2f;
@@ -54,7 +63,15 @@ public class BattleManager : MonoBehaviour
                 spawnPosition,
                 Quaternion.identity);
     
-            alien.Initialize(data.level);
+                alien.Initialize(data.level);
+
+                alien.OnReachedTarget += OnAlienReached;
+
+                totalAlienCount++;
+
+                alien.StartMove(battleTarget.position);
+
+                battleAliens.Add(alien);
         }
     }
 
@@ -72,6 +89,37 @@ public class BattleManager : MonoBehaviour
     private void EndBattle()
     {
         ChangeState(BattleState.Finished);
+    }
+
+    private void OnAlienReached(BattleAlien alien)
+    {
+        reachedAlienCount++;
+
+        Debug.Log($"到着 {reachedAlienCount} / {totalAlienCount}");
+
+        if (reachedAlienCount >= totalAlienCount)
+        {
+            OnAllAliensReached();
+        }
+    }
+
+    private void OnAllAliensReached()
+    {
+        Debug.Log("全クラゲ到着！");
+
+        BeginBattle();
+    }
+
+    private void BeginBattle()
+    {
+        ChangeState(BattleState.Battle);
+
+        Debug.Log("戦闘開始！");
+
+        foreach (BattleAlien alien in battleAliens)
+        {
+            alien.BeginBattle();
+        }
     }
 
 }
