@@ -12,6 +12,7 @@ public class BattleAlien : MonoBehaviour
     [Header("HP")]
     [SerializeField] private int maxHP = 10;
     [SerializeField] private int currentHP;
+    [SerializeField] private int attack = 1;
 
     private bool canAttack = false;
     private float attackTimer = 0f;
@@ -27,10 +28,39 @@ public class BattleAlien : MonoBehaviour
     {
         this.level = level;
         targetPlanet = planet;
+        ApplyStatsByLevel();
         currentHP = maxHP;
 
         Debug.Log($"BattleAlien Lv.{level} Initialized");
+        Debug.Log($"Attack : {attack}");
         Debug.Log($"BattleAlien HP : {currentHP} / {maxHP}");
+    }
+
+    private void ApplyStatsByLevel()
+    {
+        switch (level)
+        {
+            case 1:
+                attack = 1;
+                maxHP = 10;
+                break;
+
+            case 2:
+                attack = 2;
+                maxHP = 20;
+                break;
+            
+            case 3:
+                attack = 3;
+                maxHP = 30;
+                break;
+
+            default:
+                // 仮実装
+                attack = level;
+                maxHP = level * 10;
+                break;
+        }
     }
 
     public void StartMove(Vector3 target)
@@ -81,10 +111,10 @@ public class BattleAlien : MonoBehaviour
     {
         Debug.Log($"{gameObject.name} が攻撃！");
 
-        targetPlanet.TakeDamage(1);
-
-        // 攻撃の反動で自分もダメージを受ける
-        TakeDamage(1);
+        // 惑星へ攻撃し、反撃ダメージを受け取る
+        int counterDamage = targetPlanet.TakeDamage(attack);
+        // 惑星から反撃ダメージを受ける
+        TakeDamage(counterDamage);
     }
 
     public void TakeDamage(int damage)
@@ -95,5 +125,24 @@ public class BattleAlien : MonoBehaviour
         currentHP = Mathf.Max(currentHP, 0);
 
         Debug.Log($"BattleAlien HP : {currentHP} / {maxHP}");
+
+        if (currentHP == 0)
+        {
+            Die();
+        }
+    }
+
+    private void Die()
+    {
+        canAttack = false;
+
+        Debug.Log("BattleAlien撃破");
+
+        BattleManager.Instance.OnAlienDestroyed(this);
+    }
+
+    public void StopBattle()
+    {
+        canAttack = false;
     }
 }

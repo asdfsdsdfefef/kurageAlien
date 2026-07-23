@@ -7,6 +7,13 @@ public enum BattleState
     Finished
 }
 
+public enum BattleResult
+{
+    None,
+    Victory,
+    Defeat
+}
+
 public class BattleManager : MonoBehaviour
 {
     [Header("戦闘対象")]
@@ -14,6 +21,7 @@ public class BattleManager : MonoBehaviour
 
     [Header("戦闘状態")]
     [SerializeField] private BattleState currentState;
+    [SerializeField] private BattleResult currentResult = BattleResult.None;
 
     [Header("戦闘用クラゲ")]
     [SerializeField] private BattleAlien battleAlienPrefab;
@@ -21,15 +29,18 @@ public class BattleManager : MonoBehaviour
     [Header("移動設定")]
     [SerializeField] private Transform battleTarget;
 
+    public static BattleManager Instance {get; private set; }
     private int reachedAlienCount = 0;
     private int totalAlienCount = 0;
     private readonly List<BattleAlien> battleAliens = new();
+    private bool battleEnded = false;
 
     private void Awake()
     {
         Debug.Log("BattleManager Ready");
         LoadBattleData();
         SpawnBattleAliens();
+        Instance = this;
 
         planet.OnDestroyed += OnPlanetDestroyed;
     }
@@ -90,7 +101,21 @@ public class BattleManager : MonoBehaviour
 
     private void EndBattle()
     {
+        if (battleEnded)
+        {
+            return;
+        }
+
+        battleEnded = true;
+
+        foreach (BattleAlien alien in battleAliens)
+        {
+            alien.StopBattle();
+        }
+        
         ChangeState(BattleState.Finished);
+
+        Debug.Log($"Battle Result : {currentResult}");
     }
 
     private void OnAlienReached(BattleAlien alien)
@@ -114,6 +139,10 @@ public class BattleManager : MonoBehaviour
 
     private void BeginBattle()
     {
+        currentResult = BattleResult.None;
+
+        battleEnded = false;
+
         ChangeState(BattleState.Battle);
 
         Debug.Log("戦闘開始！");
@@ -123,9 +152,24 @@ public class BattleManager : MonoBehaviour
             alien.BeginBattle();
         }
     }
+
+    public void OnAlienDestroyed(BattleAlien alien)
+    {
+        Debug.Log($"{alien.name}が撃破されました。");
+
+        battleAliens.Remove(alien);
+
+        if (battleAliens.Count == 0)
+        {
+            Debug.Log("クラゲが全滅しました。");
+            SetBattleResult(BattleResult.Defeat);
+            EndBattle();
+        }
+    }
     
     private void OnPlanetDestroyed()
     {
+        SetBattleResult(BattleResult.Victory);
         EndBattle();
     }
 
@@ -135,5 +179,10 @@ public class BattleManager : MonoBehaviour
         {
             planet.OnDestroyed -= OnPlanetDestroyed;
         }
+    }
+
+    private void SetBattleResult(BattleResult result)
+    {
+        currentResult = result;
     }
 }
