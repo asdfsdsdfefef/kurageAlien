@@ -11,11 +11,10 @@ public class GameManager : MonoBehaviour
     [Header("ゲーム状態")]
     [SerializeField] private GameState currentState;
 
-    [Header("シーン管理")]
-    [SerializeField] private SceneLoader sceneLoader;
-
     [Header("グリッド管理")]
     [SerializeField] private GridManager gridManager;
+
+    [SerializeField] private AlienSpawner alienSpawner;
 
     private void Awake()
     {
@@ -69,6 +68,27 @@ public class GameManager : MonoBehaviour
 
     private void TransferToBattle()
     {
-        sceneLoader.LoadBattleScene();
+        SceneLoader.LoadBattleScene();
+    }
+
+    private void Start()
+    {
+        Debug.Log("BattleDataに保存されているクラゲ数 : " + BattleData.aliens.Count);
+
+        RestoreBattleData();
+    }
+
+    private void RestoreBattleData()
+    {
+        foreach (BattleAlienData alienData in BattleData.aliens)
+        {
+            alienSpawner.SpawnAlienAt(alienData.gridPosition, alienData.level);
+        }
+
+        Debug.Log($"盤面復元完了 : {BattleData.aliens.Count}体");
+
+        BattleData.Clear();
+
+        Debug.Log("BattleDataをクリアしました");
     }
 }

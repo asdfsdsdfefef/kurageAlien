@@ -70,4 +70,17 @@ public class GridManager : MonoBehaviour
     {
         return cells;
     }
+
+    public GridCell GetCell(Vector2Int gridPosition)
+    {
+        foreach (GridCell cell in cells)
+        {
+            if (cell.GridPosition == gridPosition)
+            {
+                return cell;
+            }
+        }
+
+        return null;
+    }
 }

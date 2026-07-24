@@ -1,14 +1,14 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class SceneLoader : MonoBehaviour
+public static class SceneLoader
 {
-    public void LoadBattleScene()
+    public static void LoadBattleScene()
     {
         SceneManager.LoadScene("BattleScene");
     }
 
-    public void LoadMainScene()
+    public static void LoadMainScene()
     {
         SceneManager.LoadScene("Main");
     }

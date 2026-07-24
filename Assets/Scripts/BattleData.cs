@@ -12,4 +12,11 @@ public static class BattleData
 {
     // 出撃するクラゲ情報
     public static List<BattleAlienData> aliens = new List<BattleAlienData>();
+
+
+    public static void Clear()
+    {
+        aliens.Clear();
+    }
+
 }

@@ -14,6 +14,8 @@ public class BattleAlien : MonoBehaviour
     [SerializeField] private int currentHP;
     [SerializeField] private int attack = 1;
 
+    [SerializeField] private SpriteRenderer spriteRenderer;
+
     private bool canAttack = false;
     private float attackTimer = 0f;
 
@@ -115,6 +117,8 @@ public class BattleAlien : MonoBehaviour
         int counterDamage = targetPlanet.TakeDamage(attack);
         // 惑星から反撃ダメージを受ける
         TakeDamage(counterDamage);
+
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     public void TakeDamage(int damage)
@@ -139,6 +143,8 @@ public class BattleAlien : MonoBehaviour
         Debug.Log("BattleAlien撃破");
 
         BattleManager.Instance.OnAlienDestroyed(this);
+
+        spriteRenderer.enabled = false;
     }
 
     public void StopBattle()

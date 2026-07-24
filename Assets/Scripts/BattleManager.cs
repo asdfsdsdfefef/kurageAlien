@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
 
 public enum BattleState
 {
@@ -116,6 +117,8 @@ public class BattleManager : MonoBehaviour
         ChangeState(BattleState.Finished);
 
         Debug.Log($"Battle Result : {currentResult}");
+
+        StartCoroutine(EndBattleSequence());
     }
 
     private void OnAlienReached(BattleAlien alien)
@@ -184,5 +187,19 @@ public class BattleManager : MonoBehaviour
     private void SetBattleResult(BattleResult result)
     {
         currentResult = result;
+    }
+
+    private IEnumerator EndBattleSequence()
+    {
+        // 勝敗表示を見せる時間
+        yield return new WaitForSeconds(2f);
+
+        // BattleData.Clear();
+
+        SceneLoader.LoadMainScene();
+
+        Debug.Log("BattleData Cleared");
+
+        Debug.Log("Battle End Sequence Finished");
     }
 }
